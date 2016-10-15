@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             config = new Configuration();
             try {
-                config.read(new JsonReader(new InputStreamReader(getAssets().open("defaults.json"))));
+                config.read(new JsonReader(new InputStreamReader(FileHelper.openRead(this, "settings.json"))));
             } catch (IOException exception) {
                 Toast.makeText(this, "Cannot read configuration: " + exception, Toast.LENGTH_SHORT).show();
             }
@@ -96,10 +96,17 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            case R.id.action_save:
+                try {
+                    config.write(new JsonWriter(new OutputStreamWriter(FileHelper.openWrite(this, "settings.json"))));
+                } catch (IOException exception) {
+                    Toast.makeText(this, "Cannot write configuration: " + exception, Toast.LENGTH_SHORT).show();
+                }
+                break;
             case R.id.action_load_defaults:
                 config = new Configuration();
                 try {
-                    config.read(new JsonReader(new InputStreamReader(getAssets().open("defaults.json"))));
+                    config.read(new JsonReader(new InputStreamReader(getAssets().open("settings.json"))));
                 } catch (IOException exception) {
                     Toast.makeText(this, "Cannot read configuration: " + exception, Toast.LENGTH_SHORT).show();
                 }
