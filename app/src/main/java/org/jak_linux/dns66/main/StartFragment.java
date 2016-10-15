@@ -12,11 +12,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import org.jak_linux.dns66.MainActivity;
-import org.jak_linux.dns66.R;
+import org.jak_linux.dns66.databinding.FragmentStartBinding;
 
 public class StartFragment extends Fragment {
     public StartFragment() {
@@ -25,17 +23,8 @@ public class StartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_start, container, false);
-        Switch switchOnBoot = (Switch) rootView.findViewById(R.id.switch_onboot);
-
-        switchOnBoot.setChecked(MainActivity.config.isAutoStart());
-        switchOnBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.config.setAutoStart(isChecked);
-            }
-        });
-
-        return rootView;
+        FragmentStartBinding binding = FragmentStartBinding.inflate(inflater, container, false);
+        binding.setConfig(MainActivity.config);
+        return binding.getRoot();
     }
 }

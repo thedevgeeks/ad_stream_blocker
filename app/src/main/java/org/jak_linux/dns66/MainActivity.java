@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         if (item != null) {
             editIntent.putExtra("ITEM_TITLE", item.getTitle());
             editIntent.putExtra("ITEM_LOCATION", item.getLocation());
-            editIntent.putExtra("ITEM_STATE", item.getLocation());
+            editIntent.putExtra("ITEM_STATE", item.getState());
         }
         startActivityForResult(editIntent, REQUEST_ITEM_EDIT);
     }

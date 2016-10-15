@@ -16,13 +16,13 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import org.jak_linux.dns66.Configuration;
 import org.jak_linux.dns66.ItemChangedListener;
 import org.jak_linux.dns66.MainActivity;
 import org.jak_linux.dns66.R;
+import org.jak_linux.dns66.databinding.FragmentHostsBinding;
 
 public class HostsFragment extends Fragment {
 
@@ -32,7 +32,10 @@ public class HostsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_hosts, container, false);
+        FragmentHostsBinding binding = FragmentHostsBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
+
+        binding.setHosts(MainActivity.config.getHosts());
 
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.host_entries);
 
@@ -61,15 +64,6 @@ public class HostsFragment extends Fragment {
                         mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
                     }
                 });
-            }
-        });
-
-        Switch hostEnabled = (Switch) rootView.findViewById(R.id.host_enabled);
-        hostEnabled.setChecked(MainActivity.config.getHosts().isEnabled());
-        hostEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.config.getHosts().setEnabled(isChecked);
             }
         });
 

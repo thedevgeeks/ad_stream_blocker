@@ -23,6 +23,8 @@ import org.jak_linux.dns66.Configuration;
 import org.jak_linux.dns66.ItemChangedListener;
 import org.jak_linux.dns66.MainActivity;
 import org.jak_linux.dns66.R;
+import org.jak_linux.dns66.databinding.FragmentDnsBinding;
+import org.jak_linux.dns66.databinding.FragmentHostsBinding;
 
 public class DNSFragment extends Fragment {
 
@@ -32,8 +34,10 @@ public class DNSFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dns, container, false);
+        FragmentDnsBinding binding = FragmentDnsBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
 
+        binding.setDnsServers(MainActivity.config.getDnsServers());
         RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.dns_entries);
 
         // use this setting to improve performance if you know that changes
@@ -66,14 +70,6 @@ public class DNSFragment extends Fragment {
             }
         });
 
-        Switch dnsEnabled = (Switch) rootView.findViewById(R.id.dns_enabled);
-        dnsEnabled.setChecked(MainActivity.config.getDnsServers().isEnabled());
-        dnsEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.config.getDnsServers().setEnabled(isChecked);
-            }
-        });
         return rootView;
     }
 }
