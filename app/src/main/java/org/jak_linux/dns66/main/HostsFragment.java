@@ -9,7 +9,6 @@ package org.jak_linux.dns66.main;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +42,7 @@ public class HostsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
-        final ItemRecyclerViewAdapter mAdapter = new ItemRecyclerViewAdapter(MainActivity.config.hosts.items);
+        final ItemRecyclerViewAdapter mAdapter = new ItemRecyclerViewAdapter(MainActivity.config.getHosts().getItems());
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
@@ -58,7 +57,7 @@ public class HostsFragment extends Fragment {
                 main.editItem(null, new ItemChangedListener() {
                     @Override
                     public void onItemChanged(Configuration.Item item) {
-                        MainActivity.config.hosts.items.add(item);
+                        MainActivity.config.getHosts().getItems().add(item);
                         mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
                     }
                 });
@@ -66,11 +65,11 @@ public class HostsFragment extends Fragment {
         });
 
         Switch hostEnabled = (Switch) rootView.findViewById(R.id.host_enabled);
-        hostEnabled.setChecked(MainActivity.config.hosts.enabled);
+        hostEnabled.setChecked(MainActivity.config.getHosts().isEnabled());
         hostEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.config.hosts.enabled = isChecked;
+                MainActivity.config.getHosts().setEnabled(isChecked);
             }
         });
 

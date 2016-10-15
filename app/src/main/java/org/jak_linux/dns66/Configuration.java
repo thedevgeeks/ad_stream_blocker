@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class Configuration {
     private static final int VERSION = 1;
-    public boolean autoStart;
-    public Hosts hosts;
-    public DnsServers dnsServers;
+    private boolean autoStart = false;
+    private Hosts hosts = new Hosts();
+    private DnsServers dnsServers = new DnsServers();
 
     private static Hosts readHosts(JsonReader reader) throws IOException {
         Hosts hosts = new Hosts();
@@ -31,10 +31,10 @@ public class Configuration {
         while (reader.hasNext()) {
             switch (reader.nextName()) {
                 case "enabled":
-                    hosts.enabled = reader.nextBoolean();
+                    hosts.setEnabled(reader.nextBoolean());
                     break;
                 case "items":
-                    hosts.items = readItemList(reader);
+                    hosts.setItems(readItemList(reader));
                     break;
                 default:
                     reader.skipValue();
@@ -52,10 +52,10 @@ public class Configuration {
         while (reader.hasNext()) {
             switch (reader.nextName()) {
                 case "enabled":
-                    servers.enabled = reader.nextBoolean();
+                    servers.setEnabled(reader.nextBoolean());
                     break;
                 case "items":
-                    servers.items = readItemList(reader);
+                    servers.setItems(readItemList(reader));
                     break;
                 default:
                     reader.skipValue();
@@ -83,13 +83,13 @@ public class Configuration {
         while (reader.hasNext()) {
             switch (reader.nextName()) {
                 case "title":
-                    item.title = reader.nextString();
+                    item.setTitle(reader.nextString());
                     break;
                 case "location":
-                    item.location = reader.nextString();
+                    item.setLocation(reader.nextString());
                     break;
                 case "state":
-                    item.state = reader.nextInt();
+                    item.setState(reader.nextInt());
                     break;
                 default:
                     reader.skipValue();
@@ -103,17 +103,17 @@ public class Configuration {
 
     private static void writeHosts(JsonWriter writer, Hosts h) throws IOException {
         writer.beginObject();
-        writer.name("enabled").value(h.enabled);
+        writer.name("enabled").value(h.isEnabled());
         writer.name("items");
-        writeItemList(writer, h.items);
+        writeItemList(writer, h.getItems());
         writer.endObject();
     }
 
     private static void writeDnsServers(JsonWriter writer, DnsServers s) throws IOException {
         writer.beginObject();
-        writer.name("enabled").value(s.enabled);
+        writer.name("enabled").value(s.isEnabled());
         writer.name("items");
-        writeItemList(writer, s.items);
+        writeItemList(writer, s.getItems());
         writer.endObject();
     }
 
@@ -127,20 +127,20 @@ public class Configuration {
 
     private static void writeItem(JsonWriter writer, Item i) throws IOException {
         writer.beginObject();
-        writer.name("title").value(i.title);
-        writer.name("location").value(i.location);
-        writer.name("state").value(i.state);
+        writer.name("title").value(i.getTitle());
+        writer.name("location").value(i.getLocation());
+        writer.name("state").value(i.getState());
         writer.endObject();
     }
 
     public void write(JsonWriter writer) throws IOException {
         writer.beginObject();
         writer.name("version").value(VERSION);
-        writer.name("autoStart").value(autoStart);
+        writer.name("autoStart").value(isAutoStart());
         writer.name("hosts");
-        writeHosts(writer, hosts);
+        writeHosts(writer, getHosts());
         writer.name("dnsServers");
-        writeDnsServers(writer, dnsServers);
+        writeDnsServers(writer, getDnsServers());
         writer.endObject();
     }
 
@@ -154,13 +154,13 @@ public class Configuration {
                     }
                     break;
                 case "autoStart":
-                    autoStart = reader.nextBoolean();
+                    setAutoStart(reader.nextBoolean());
                     break;
                 case "hosts":
-                    hosts = readHosts(reader);
+                    setHosts(readHosts(reader));
                     break;
                 case "dnsServers":
-                    dnsServers = readDnsServers(reader);
+                    setDnsServers(readDnsServers(reader));
                     break;
                 default:
                     reader.skipValue();
@@ -170,22 +170,102 @@ public class Configuration {
         reader.endObject();
     }
 
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+    }
+
+    public Hosts getHosts() {
+        return hosts;
+    }
+
+    public void setHosts(Hosts hosts) {
+        this.hosts = hosts;
+    }
+
+    public DnsServers getDnsServers() {
+        return dnsServers;
+    }
+
+    public void setDnsServers(DnsServers dnsServers) {
+        this.dnsServers = dnsServers;
+    }
+
     public static class Item {
         public static final int STATE_IGNORE = 2;
         public static final int STATE_DENY = 0;
         public static final int STATE_ALLOW = 1;
-        public String title;
-        public String location;
-        public int state;
+        private String title;
+        private String location;
+        private int state;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public void setLocation(String location) {
+            this.location = location;
+        }
+
+        public int getState() {
+            return state;
+        }
+
+        public void setState(int state) {
+            this.state = state;
+        }
     }
 
     public static class Hosts {
-        public boolean enabled;
-        public List<Item> items = new ArrayList<>();
+        private boolean enabled;
+        private List<Item> items = new ArrayList<>();
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public List<Item> getItems() {
+            return items;
+        }
+
+        public void setItems(List<Item> items) {
+            this.items = items;
+        }
     }
 
     public static class DnsServers {
-        public boolean enabled;
-        public List<Item> items = new ArrayList<>();
+        private boolean enabled;
+        private List<Item> items = new ArrayList<>();
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public List<Item> getItems() {
+            return items;
+        }
+
+        public void setItems(List<Item> items) {
+            this.items = items;
+        }
     }
 }

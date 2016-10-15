@@ -9,7 +9,6 @@ package org.jak_linux.dns66.main;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +44,7 @@ public class DNSFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        final ItemRecyclerViewAdapter mAdapter = new ItemRecyclerViewAdapter(MainActivity.config.dnsServers.items);
+        final ItemRecyclerViewAdapter mAdapter = new ItemRecyclerViewAdapter(MainActivity.config.getDnsServers().getItems());
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
@@ -60,7 +59,7 @@ public class DNSFragment extends Fragment {
                 main.editItem(null, new ItemChangedListener() {
                     @Override
                     public void onItemChanged(Configuration.Item item) {
-                        MainActivity.config.dnsServers.items.add(item);
+                        MainActivity.config.getDnsServers().getItems().add(item);
                         mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
                     }
                 });
@@ -68,11 +67,11 @@ public class DNSFragment extends Fragment {
         });
 
         Switch dnsEnabled = (Switch) rootView.findViewById(R.id.dns_enabled);
-        dnsEnabled.setChecked(MainActivity.config.dnsServers.enabled);
+        dnsEnabled.setChecked(MainActivity.config.getDnsServers().isEnabled());
         dnsEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.config.dnsServers.enabled = isChecked;
+                MainActivity.config.getDnsServers().setEnabled(isChecked);
             }
         });
         return rootView;

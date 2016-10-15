@@ -28,11 +28,11 @@ public class StartFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_start, container, false);
         Switch switchOnBoot = (Switch) rootView.findViewById(R.id.switch_onboot);
 
-        switchOnBoot.setChecked(MainActivity.config.autoStart);
+        switchOnBoot.setChecked(MainActivity.config.isAutoStart());
         switchOnBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MainActivity.config.autoStart = isChecked;
+                MainActivity.config.setAutoStart(isChecked);
             }
         });
 

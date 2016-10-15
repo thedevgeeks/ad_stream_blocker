@@ -43,9 +43,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.item = items.get(position);
-        holder.titleView.setText(items.get(position).title);
-        holder.subtitleView.setText(items.get(position).location);
-        switch (items.get(position).state) {
+        holder.titleView.setText(items.get(position).getTitle());
+        holder.subtitleView.setText(items.get(position).getLocation());
+        switch (items.get(position).getState()) {
             case Configuration.Item.STATE_IGNORE:
                 holder.iconView.setImageDrawable(context.getDrawable(R.drawable.ic_state_ignore));
                 break;
@@ -85,7 +85,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
         public void onClick(View v) {
             final int position = getAdapterPosition();
             if (v == iconView) {
-                item.state = (item.state + 1) % 3;
+                item.setState((item.getState() + 1) % 3);
                 ItemRecyclerViewAdapter.this.notifyItemChanged(position);
             } else if (v == view) {
                 // Start edit activity

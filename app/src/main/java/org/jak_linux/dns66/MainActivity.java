@@ -26,8 +26,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 
 import org.jak_linux.dns66.main.MainFragmentPagerAdapter;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -164,9 +162,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ITEM_EDIT && resultCode == RESULT_OK) {
             Configuration.Item item = new Configuration.Item();
             Log.d("FOOOO", "onActivityResult: item title = " + data.getStringExtra("ITEM_TITLE"));
-            item.title = data.getStringExtra("ITEM_TITLE");
-            item.location = data.getStringExtra("ITEM_LOCATION");
-            item.state = data.getIntExtra("ITEM_STATE", 0);
+            item.setTitle(data.getStringExtra("ITEM_TITLE"));
+            item.setLocation(data.getStringExtra("ITEM_LOCATION"));
+            item.setState(data.getIntExtra("ITEM_STATE", 0));
             this.itemChangedListener.onItemChanged(item);
         }
     }
@@ -186,9 +184,9 @@ public class MainActivity extends AppCompatActivity {
 
         this.itemChangedListener = listener;
         if (item != null) {
-            editIntent.putExtra("ITEM_TITLE", item.title);
-            editIntent.putExtra("ITEM_LOCATION", item.location);
-            editIntent.putExtra("ITEM_STATE", item.location);
+            editIntent.putExtra("ITEM_TITLE", item.getTitle());
+            editIntent.putExtra("ITEM_LOCATION", item.getLocation());
+            editIntent.putExtra("ITEM_STATE", item.getLocation());
         }
         startActivityForResult(editIntent, REQUEST_ITEM_EDIT);
     }
