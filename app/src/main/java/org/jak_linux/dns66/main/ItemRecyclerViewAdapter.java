@@ -8,6 +8,8 @@
 package org.jak_linux.dns66.main;
 
 import android.content.Context;
+import android.databinding.ObservableList;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,43 +21,64 @@ import org.jak_linux.dns66.Configuration;
 import org.jak_linux.dns66.ItemChangedListener;
 import org.jak_linux.dns66.MainActivity;
 import org.jak_linux.dns66.R;
+import org.jak_linux.dns66.databinding.ViewItemBinding;
 
 import java.util.List;
+import java.util.Observable;
 
 public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerViewAdapter.ViewHolder> {
     public List<Configuration.Item> items;
     private Context context;
 
-    public ItemRecyclerViewAdapter(List<Configuration.Item> items) {
+    public ItemRecyclerViewAdapter(ObservableList<Configuration.Item> items) {
         this.items = items;
+        items.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Configuration.Item>>() {
+            @Override
+            public void onChanged(ObservableList<Configuration.Item> items) {
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeChanged(ObservableList<Configuration.Item> items, int start, int count) {
+                notifyItemRangeChanged(start, count);
+            }
+
+            @Override
+            public void onItemRangeInserted(ObservableList<Configuration.Item> items, int start, int count) {
+                notifyItemRangeInserted(start, count);
+            }
+
+            @Override
+            public void onItemRangeMoved(ObservableList<Configuration.Item> items, int from, int to, int count) {
+                if (from < to) {
+                    for (int i = 0; i < count; i++)
+                        notifyItemMoved(from + i, to + i);
+                } else {
+                    for (int i = count; i >= 0; i--)
+                        notifyItemMoved(from + i, to + i);
+                }
+            }
+
+            @Override
+            public void onItemRangeRemoved(ObservableList<Configuration.Item> items, int start, int count) {
+                notifyItemRangeRemoved(start, count);
+            }
+        });
+
     }
 
     // Create new views (invoked by the layout manager)
     @Override
     public ItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false);
+        ViewItemBinding viewDataBinding = ViewItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(viewDataBinding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.item = items.get(position);
-        holder.titleView.setText(items.get(position).getTitle());
-        holder.subtitleView.setText(items.get(position).getLocation());
-        switch (items.get(position).getState()) {
-            case Configuration.Item.STATE_IGNORE:
-                holder.iconView.setImageDrawable(context.getDrawable(R.drawable.ic_state_ignore));
-                break;
-            case Configuration.Item.STATE_DENY:
-                holder.iconView.setImageDrawable(context.getDrawable(R.drawable.ic_state_deny));
-                break;
-            case Configuration.Item.STATE_ALLOW:
-                holder.iconView.setImageDrawable(context.getDrawable(R.drawable.ic_state_allow));
-                break;
-        }
+        holder.viewItemBinding.setItem(items.get(position));
     }
 
     @Override
@@ -64,37 +87,29 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public Configuration.Item item;
-        public View view;
-        public TextView titleView;
-        public TextView subtitleView;
-        public ImageView iconView;
+        public ViewItemBinding viewItemBinding;
 
-        public ViewHolder(View view) {
-            super(view);
-            this.view = view;
-            titleView = (TextView) view.findViewById(R.id.item_title);
-            subtitleView = (TextView) view.findViewById(R.id.item_subtitle);
-            iconView = (ImageView) view.findViewById(R.id.item_enabled);
+        public ViewHolder(ViewItemBinding viewItemBinding) {
+            super(viewItemBinding.getRoot());
+            this.viewItemBinding = viewItemBinding;
 
-            view.setOnClickListener(this);
-            iconView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
+            itemView.findViewById(R.id.item_enabled).setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             final int position = getAdapterPosition();
-            if (v == iconView) {
+            final Configuration.Item item = viewItemBinding.getItem();
+            if (v.getId() == R.id.item_enabled) {
                 item.setState((item.getState() + 1) % 3);
-                ItemRecyclerViewAdapter.this.notifyItemChanged(position);
-            } else if (v == view) {
+            } else if (v == itemView) {
                 // Start edit activity
                 MainActivity main = (MainActivity) v.getContext();
                 main.editItem(item, new ItemChangedListener() {
                             @Override
                             public void onItemChanged(Configuration.Item changedItem) {
                                 items.set(position, changedItem);
-                                ItemRecyclerViewAdapter.this.notifyItemChanged(position);
                             }
                         }
                 );

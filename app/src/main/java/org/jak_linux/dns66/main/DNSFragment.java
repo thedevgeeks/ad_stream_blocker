@@ -48,6 +48,7 @@ public class DNSFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+
         final ItemRecyclerViewAdapter mAdapter = new ItemRecyclerViewAdapter(MainActivity.config.getDnsServers().getItems());
         mRecyclerView.setAdapter(mAdapter);
 

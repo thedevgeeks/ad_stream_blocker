@@ -9,6 +9,7 @@ package org.jak_linux.dns66;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.databinding.ObservableArrayList;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
@@ -69,9 +70,9 @@ public class Configuration extends BaseObservable {
         return servers;
     }
 
-    private static List<Item> readItemList(JsonReader reader) throws IOException {
+    private static ObservableArrayList<Item> readItemList(JsonReader reader) throws IOException {
         reader.beginArray();
-        List<Item> list = new ArrayList<Item>();
+        ObservableArrayList<Item> list = new ObservableArrayList<Item>();
         while (reader.hasNext())
             list.add(readItem(reader));
 
@@ -239,7 +240,7 @@ public class Configuration extends BaseObservable {
 
     public static class Hosts extends BaseObservable {
         private boolean enabled;
-        private List<Item> items = new ArrayList<>();
+        private ObservableArrayList<Item> items = new ObservableArrayList<>();
 
         @Bindable
         public boolean isEnabled() {
@@ -251,18 +252,18 @@ public class Configuration extends BaseObservable {
             notifyPropertyChanged(BR.enabled);
         }
 
-        public List<Item> getItems() {
+        public ObservableArrayList<Item> getItems() {
             return items;
         }
 
-        public void setItems(List<Item> items) {
+        public void setItems(ObservableArrayList<Item> items) {
             this.items = items;
         }
     }
 
     public static class DnsServers extends BaseObservable {
         private boolean enabled;
-        private List<Item> items = new ArrayList<>();
+        private ObservableArrayList<Item> items = new ObservableArrayList<>();
 
         @Bindable
         public boolean isEnabled() {
@@ -274,11 +275,11 @@ public class Configuration extends BaseObservable {
             notifyPropertyChanged(BR.enabled);
         }
 
-        public List<Item> getItems() {
+        public ObservableArrayList<Item> getItems() {
             return items;
         }
 
-        public void setItems(List<Item> items) {
+        public void setItems(ObservableArrayList<Item> items) {
             this.items = items;
         }
     }
