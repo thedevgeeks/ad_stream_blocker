@@ -7,6 +7,8 @@
  */
 package org.jak_linux.dns66;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
@@ -19,7 +21,7 @@ import java.util.List;
  *
  * @author Julian Andres Klode
  */
-public class Configuration {
+public class Configuration extends BaseObservable {
     private static final int VERSION = 1;
     private boolean autoStart = false;
     private Hosts hosts = new Hosts();
@@ -170,12 +172,14 @@ public class Configuration {
         reader.endObject();
     }
 
+    @Bindable
     public boolean isAutoStart() {
         return autoStart;
     }
 
     public void setAutoStart(boolean autoStart) {
         this.autoStart = autoStart;
+        notifyPropertyChanged(BR.autoStart);
     }
 
     public Hosts getHosts() {
@@ -194,7 +198,7 @@ public class Configuration {
         this.dnsServers = dnsServers;
     }
 
-    public static class Item {
+    public static class Item extends BaseObservable {
         public static final int STATE_IGNORE = 2;
         public static final int STATE_DENY = 0;
         public static final int STATE_ALLOW = 1;
@@ -202,41 +206,49 @@ public class Configuration {
         private String location;
         private int state;
 
+        @Bindable
         public String getTitle() {
             return title;
         }
 
         public void setTitle(String title) {
             this.title = title;
+            notifyPropertyChanged(BR.title);
         }
 
+        @Bindable
         public String getLocation() {
             return location;
         }
 
         public void setLocation(String location) {
             this.location = location;
+            notifyPropertyChanged(BR.location);
         }
 
+        @Bindable
         public int getState() {
             return state;
         }
 
         public void setState(int state) {
             this.state = state;
+            notifyPropertyChanged(BR.state);
         }
     }
 
-    public static class Hosts {
+    public static class Hosts extends BaseObservable {
         private boolean enabled;
         private List<Item> items = new ArrayList<>();
 
+        @Bindable
         public boolean isEnabled() {
             return enabled;
         }
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+            notifyPropertyChanged(BR.enabled);
         }
 
         public List<Item> getItems() {
@@ -248,16 +260,18 @@ public class Configuration {
         }
     }
 
-    public static class DnsServers {
+    public static class DnsServers extends BaseObservable {
         private boolean enabled;
         private List<Item> items = new ArrayList<>();
 
+        @Bindable
         public boolean isEnabled() {
             return enabled;
         }
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
+            notifyPropertyChanged(BR.enabled);
         }
 
         public List<Item> getItems() {
