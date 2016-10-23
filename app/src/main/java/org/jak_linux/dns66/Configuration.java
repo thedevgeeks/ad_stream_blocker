@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class Configuration {
     private static final int VERSION = 1;
-    public boolean autoStart;
-    public Hosts hosts;
-    public DnsServers dnsServers;
+    public boolean autoStart = false;
+    public Hosts hosts = new Hosts();
+    public DnsServers dnsServers = new DnsServers();
 
     private static Hosts readHosts(JsonReader reader) throws IOException {
         Hosts hosts = new Hosts();
@@ -174,18 +174,18 @@ public class Configuration {
         public static final int STATE_IGNORE = 2;
         public static final int STATE_DENY = 0;
         public static final int STATE_ALLOW = 1;
-        public String title;
-        public String location;
-        public int state;
+        public String title = "";
+        public String location = "";
+        public int state = STATE_IGNORE;
     }
 
     public static class Hosts {
-        public boolean enabled;
+        public boolean enabled = false;
         public List<Item> items = new ArrayList<>();
     }
 
     public static class DnsServers {
-        public boolean enabled;
+        public boolean enabled = false;
         public List<Item> items = new ArrayList<>();
     }
 }
